@@ -10,11 +10,13 @@ url = "https://66738677adbf0576.247ctf.com/" # SET THE HOST
 service = "/encrypt?plaintext="
 initial_padding = ("A"*31).encode("hex")
 #flag_begin = "247CTF{"
-possible_letters = ['a', 'b', 'c', 'd', 'e', 'f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+possible_letters = ['a', 'b', 'c', 'd', 'e', 'f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 byte_to_find = ''
 flag_so_far = ''
 
 IV = ''
+
+request_session = requests.Session()
 
 #### METHOD TO CHECK IV FROM ACTUAL REQUEST COOKIES####
 def get_IV_from_cookies(cookies_dict):
@@ -57,7 +59,7 @@ def xor_two_str(a,b):
     return ''.join(xored)
 
 def get_initial_IV(padding):
-	result = requests.request('GET', url)
+	result = request_session.request('GET', url)
 	IV_from_cookies = get_IV_from_cookies(result.cookies.get_dict())
 	print "[+] IV FROM COOKIES:" + IV_from_cookies
 	#result = str(wget(url+service+padding))
@@ -67,7 +69,7 @@ def get_initial_IV(padding):
 def request_cipher_text_and_get_IV(padding):
 	print "Sending padding:" + padding + " length: " + str(len(padding))
 	padding = xor_two_str(IV, padding[:32].decode("hex")) + padding[32:]
-	result = requests.request('GET', url+service+padding)
+	result = request_session.request('GET', url+service+padding)
 	print "Result: " + result.text
 	print "[+] Result to look after:" + result.text[32:63] # 0-31 (first 16 bytes) . 32 - 63 (second 16 bytes) . 64 - 97 (third 16 bytes)
 	global byte_to_find
@@ -90,7 +92,7 @@ while True:
 		local_padding_to_send =  xored_local_padding + local_padding[32:]
 		print "++++++++++++++++++++++++++++++++++++++++++ length: " + str(len(local_padding_to_send))
 		print "[+] SENDING REQUEST TO:" + url+service+local_padding_to_send + flag_so_far.encode("hex") + letter.encode("hex")
-		local_result = requests.request('GET', url+service+local_padding_to_send + flag_so_far.encode("hex") + letter.encode("hex"))
+		local_result = request_session.request('GET', url+service+local_padding_to_send + flag_so_far.encode("hex") + letter.encode("hex"))
 		print "[+]RESULT:" + local_result.text
 
 		print "############################### RESULT WE LOOK AFTER: " + byte_to_find
