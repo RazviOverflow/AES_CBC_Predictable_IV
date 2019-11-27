@@ -1,5 +1,14 @@
 #!/usr/bin/python
 
+###
+#
+# Author: 	RazviOverflow
+# Github: 	https://github.com/RazviOverflow
+# Twitter:	https://twitter.com/Razvieu
+#
+###
+
+
 # from pwn import *
 import requests
 import base64
