@@ -8,12 +8,10 @@
 #
 ###
 
-
 # from pwn import *
 import requests
 import base64
 import json
-import sys
 
 url = "" # SET THE HOST
 service = "/encrypt?plaintext="
@@ -27,7 +25,7 @@ IV = ''
 
 request_session = requests.Session()
 
-#### METHOD TO CHECK IV FROM ACTUAL REQUEST COOKIES####
+#### RETRIEVE IV FROM ACTUAL REQUEST COOKIES ####
 def get_IV_from_cookies(cookies_dict):
 	cookie_json = json.dumps(cookies_dict)
 	cookie_json = json.loads(cookie_json)
